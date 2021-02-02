@@ -1,6 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image } from 'react-native';
+import AppHeader from '../AppHeader'
 import firebase from 'firebase';
+import db from '../config'
 
 export default class SignupLoginScreen extends React.Component{
     
@@ -24,9 +26,9 @@ export default class SignupLoginScreen extends React.Component{
         })
     }
 
-    userSignUp = () =>{
+    userSignUp = (username, password) =>{
         firebase.auth().createUserWithEmailAndPassword(username, password)
-        .then((response)=>{
+        .then(()=>{
             return alert("User Added Successfully")
         })
         .catch(function(error){
@@ -39,6 +41,12 @@ export default class SignupLoginScreen extends React.Component{
     render(){
         return(
             <View>
+                <AppHeader/>
+                <View style={{alignItems:'center',}}>
+                    <Image source={require('../assets/barterr.png')}
+                    style={{width:200, height:200}}
+                    />
+                </View>
                 <View style = {{alignItems:'center'}}>
                 <TextInput
                 style = {styles.loginBox}
