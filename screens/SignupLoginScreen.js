@@ -57,7 +57,7 @@ export default class SignupLoginScreen extends React.Component{
                             lastName:text,
                         })
                     }}
-                />
+                    />
 
                     <TextInput
                     style={styles.formTextInput}
@@ -69,7 +69,7 @@ export default class SignupLoginScreen extends React.Component{
                             phoneNumber:text,
                         })
                     }}
-                />
+                    />
 
                     <TextInput
                     style={styles.formTextInput}
@@ -80,7 +80,7 @@ export default class SignupLoginScreen extends React.Component{
                             address:text,
                         })
                     }}
-                />
+                    />
 
                     <TextInput
                     style={styles.formTextInput}
@@ -91,7 +91,7 @@ export default class SignupLoginScreen extends React.Component{
                             username:text,
                         })
                     }}
-                />
+                    />
 
                     <TextInput
                     style={styles.formTextInput}
@@ -230,7 +230,8 @@ export default class SignupLoginScreen extends React.Component{
                 style = {[styles.button, {marginBottom:10}]}
                 onPress={
                     ()=>{
-                        this.userLogin(this.state.username, this.state.password)
+                        this.userLogin( this.state.username, this.state.password )
+                        this.props.navigation.navigate('ExchangeScreen')
                     }
                 }
                 >
