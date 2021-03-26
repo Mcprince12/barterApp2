@@ -1,8 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, View, Modal, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
-import db from '../config'
-import firebase from 'firebase'
+import db from '../config';
+import firebase from 'firebase';
+import AppHeader from '../AppHeader';
 
 export default class ExchangeScreen extends React.Component
 {
@@ -44,6 +45,7 @@ export default class ExchangeScreen extends React.Component
     {
         return (
             <View>
+                <AppHeader/>
                 <Modal>
                     <TextInput
                         style={styles.Box}
@@ -76,7 +78,7 @@ export default class ExchangeScreen extends React.Component
                     }
                 >
                     <Text
-                        style={{color:'#ffff', fontSize:18, fontWeight:'bold'}}
+                        style={{color:'#ffff', fontSize:18, fontWeight:'bold', marginTop:25}}
                     >
                         Add Item
                     </Text>
@@ -89,18 +91,18 @@ export default class ExchangeScreen extends React.Component
 const styles = StyleSheet.create( {
   Box: {
   width: "80%",
-  height: RFValue(50),
+  height: 50,
   borderWidth: 1.5,
   borderColor: "#ffffff",
-  fontSize: RFValue(20),
-  paddingLeft: RFValue(10)
+  fontSize:20,
+  paddingLeft:0
     },
     button: {
     backgroundColor: '#90ee90',
     borderRadius: 20,
     width: 200,
     height: 80,
-    marginTop: 15,
-    marginLeft:700,
+        marginTop: 15,
+    alignItems:'center'
 },
 })

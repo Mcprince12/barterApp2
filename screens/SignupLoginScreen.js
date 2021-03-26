@@ -1,9 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, Modal, KeyboardAvoidingView} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import AppHeader from '../AppHeader'
 import firebase from 'firebase';
-import db from '../config'
+import db from '../config';
+import ExchangeScreen from '../screens/ExchangeScreen'
 
 export default class SignupLoginScreen extends React.Component{
     
@@ -21,7 +22,9 @@ export default class SignupLoginScreen extends React.Component{
         }
     }
 
-    showModal=()=>{
+    showModal = () =>
+    {
+        return(
       <Modal
            animationType="fade"
             transparent={true}
@@ -144,7 +147,7 @@ export default class SignupLoginScreen extends React.Component{
                 </ScrollView>
                 </View>
             </Modal>
-            
+        )
     }
     userLogin = (username, password) =>{
         firebase.auth().signInWithEmailAndPassword(username, password)
@@ -230,8 +233,8 @@ export default class SignupLoginScreen extends React.Component{
                 style = {[styles.button, {marginBottom:10}]}
                 onPress={
                     ()=>{
-                        this.userLogin( this.state.username, this.state.password )
-                        this.props.navigation.navigate('ExchangeScreen')
+                        this.userLogin( this.state.password )
+                     this.props.navigation.navigate('AppNavigator')
                     }
                 }
                 >
