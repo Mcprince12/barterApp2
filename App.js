@@ -4,13 +4,14 @@ import SignupLoginScreen from './screens/SignupLoginScreen'
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import ExchangeScreen from './screens/ExchangeScreen';
-import HomeScreen from './screens/HomeScreen'
+import HomeScreen from './screens/HomeScreen';
+import AppDrawerNavigator from './components/AppDrawerNavigator';
 
 export default class App extends React.Component {
   render(){
     return(
       <View style = {styles.container}>
-        <SignupLoginScreen/>
+        <AppNavigator/>
       </View>
     )
   }
@@ -25,10 +26,15 @@ const styles = StyleSheet.create({
   },
 } );
 
+const SwitchNavigator = createSwitchNavigator( {
+  SignUpLoginScreen: { screen: SignupLoginScreen },
+  TabNavigator: { screen: TabNavigator },
+  Drawer:{screen:AppDrawerNavigator},
+})
 
 const TabNavigator = createBottomTabNavigator( {
   ExchangeScreen: { screen: ExchangeScreen },
-  HomeScreen:{screen:HomeScreen},
+  HomeScreen: { screen: HomeScreen },
 } )
 
-const AppNavigator = createAppContainer(TabNavigator)
+const AppNavigator = createAppContainer(SwitchNavigator)
