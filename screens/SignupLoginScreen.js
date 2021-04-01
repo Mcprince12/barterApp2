@@ -234,7 +234,7 @@ export default class SignupLoginScreen extends React.Component{
                 onPress={
                     ()=>{
                         this.userLogin( this.state.password )
-                     this.props.navigation.navigate('AppNavigator')
+                     this.props.navigation.navigate('ExchangeScreen')
                     }
                 }
                 >
