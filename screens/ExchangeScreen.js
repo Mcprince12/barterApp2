@@ -22,6 +22,7 @@ export default class ExchangeScreen extends React.Component
             userDocId: '',
             docId: '',
             userId: firebase.auth().currentUser.email,
+            currencyCode:'',
         }
     }
 
@@ -38,6 +39,18 @@ export default class ExchangeScreen extends React.Component
                     } )
                 } )
             } )
+    }
+
+    getData = () =>
+    {
+        fetch( "http://data.fixer.io/api/latest?access_key=1f7dd48123a05ae588283b5e13fae994&format=1" )
+            .then( response =>
+            {
+                var currencyCode = this.state.currencyCode
+                var currency = responseData.rates.INR
+                var value = 69 / currency
+                console.log(value)
+        })
     }
 
     getExchangeRequest = () =>
@@ -166,6 +179,11 @@ export default class ExchangeScreen extends React.Component
                                 }}
                                 value={this.state.description}
                             />
+                            <View style={{ alignItems: 'center', borderColor: 'orange', flex:1}}>
+                                <Text>
+                                    {this.state.currencyCode}
+                                </Text>
+                            </View>
                         </KeyboardAvoidingView>
                     </View>
                 )

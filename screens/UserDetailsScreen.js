@@ -43,7 +43,7 @@ export default class UserDetailsScreen extends React.Component
             "exchangerContact": this.state.recieverContact,
             "exchangerAddress": this.state.recieverAddress,
             "exchangeId": this.state.recieverRequestDocId,
-            "exchangeStatus":"in progress",
+            "exchangeStatus": "recieved",
         })
     }
        render ()
