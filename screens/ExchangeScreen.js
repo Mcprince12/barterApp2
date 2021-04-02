@@ -14,19 +14,28 @@ export default class ExchangeScreen extends React.Component
             itemName: '',
             description: '',
             username: '',
+            requestedId:'',
         }
     }
+    createUniqueId ()
+    {
+    return Math.random().toString(36).substring(7)
+    }
+
     addItem = (itemName, description) =>
     {
         var username = this.state.username
+        var requestedId = this.createUniqueId();
         db.collection( "exchange_requests" ).add( {
             "username": username,
             "item_name": itemName,
-            "description":description,
+            "description": description,
+            "requestedId":requestedId,
         } )
         this.setState( {
             itemName: '',
             description: '',
+            requestedId:'',
         } )
         
         return alert(
