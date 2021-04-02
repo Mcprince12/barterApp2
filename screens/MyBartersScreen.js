@@ -16,7 +16,7 @@ export default class MyBartersScreen extends React.Component
             userName: "",
         }
     }
-    sendNotification = (bookDetails, requestStatus) =>
+    sendNotification = (ItemDetails, requestStatus) =>
 {
     var requestId = ItemDetails.request_id
     var donorId = ItemDetails.donor_id
