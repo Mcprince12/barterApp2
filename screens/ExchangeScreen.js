@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Modal, TextInput, TouchableOpacity, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Modal, TextInput, TouchableOpacity, FlatList, KeyboardAvoidingView } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import db from '../config';
 import firebase from 'firebase';
@@ -14,15 +14,55 @@ export default class ExchangeScreen extends React.Component
             itemName: '',
             description: '',
             username: '',
-            requestedId:'',
+            requestedId: '',
+            isItemRequestActive: '',
+            requestedItemName: '',
+            itemStatus: '',
+            exchangeId: '',
+            userDocId: '',
+            docId: '',
+            userId: firebase.auth().currentUser.email,
         }
+    }
+
+    getIsExchangeRequestActive = () =>
+    {
+        db.collection( 'users' )
+            .where( 'username', '==', this.state.userId )
+            .onSnapshot( ( querySnapshot ) =>
+            {
+                querySnapshot.forEach( doc =>
+                {
+                    this.setState( {
+                        isItemRequestActive: doc.data().isItemRequestActive
+                    } )
+                } )
+            } )
+    }
+
+    getExchangeRequest = () =>
+    {
+        var exchangeRequest = db.collection( 'exchange_requests' )
+            .where( 'username', '==', this.state.userId )
+            .get()
+            .then( ( snapshot ) =>
+            {
+                if ( doc.data().item_status !== "recieved" )
+                {
+                    this.setState( {
+                        exchangId: doc.data().item_itemName,
+                        itemStatus: doc.data().item_status,
+                        docId: doc.id
+                    } )
+                }
+            } )
     }
     createUniqueId ()
     {
-    return Math.random().toString(36).substring(7)
+        return Math.random().toString( 36 ).substring( 7 )
     }
 
-    addItem = (itemName, description) =>
+    addItem = ( itemName, description ) =>
     {
         var username = this.state.username
         var requestedId = this.createUniqueId();
@@ -30,12 +70,12 @@ export default class ExchangeScreen extends React.Component
             "username": username,
             "item_name": itemName,
             "description": description,
-            "requestedId":requestedId,
+            "requestedId": requestedId,
         } )
         this.setState( {
             itemName: '',
             description: '',
-            requestedId:'',
+            requestedId: '',
         } )
         
         return alert(
@@ -45,58 +85,94 @@ export default class ExchangeScreen extends React.Component
                 {
                     text: 'OK', onPress: () =>
                     {
-                    this.props.navigation.navigate('HomeScreen')
-                }}
+                        this.props.navigation.navigate( 'HomeScreen' )
+                    }
+                }
             ]
         )
     }
+    componentDidMount ()
+    {
+        this.getExchangeRequest();
+        this.getIsExchangeRequestActive();
+    }
     render ()
     {
-        return (
-            <View>
-                <AppHeader/>
-                <Modal>
-                    <TextInput
-                        style={styles.Box}
-                        placeholder="item name"
-                        onChangeText={( text ) =>
-                        {
-                            this.setState( {
-                                itemName:text,
-                            })
-                        }}
-                    />
-                    <TextInput
-                        style={styles.Box}
-                        placeholder="item description"
-                        onChangeText={( text ) =>
-                        {
-                            this.setState( {
-                                description:text,
-                            })
-                        }}
-                    />
-                </Modal>
-                <TouchableOpacity
-                    style={[ styles.button, { marginTop: 10 } ]}
-                    onPress={
-                        () =>
-                        {
-                            this.addItem(this.state.itemName, this.state.description)
-                        }
-                    }
-                >
-                    <Text
-                        style={{color:'#ffff', fontSize:18, fontWeight:'bold', marginTop:25}}
-                    >
-                        Add Item
-                    </Text>
-                </TouchableOpacity>
-            </View>
-        )
+        
+            if (this.state.isItemRequestActive===true)
+        {
+                return (
+                    <View style={{flex:1, justifyContent:'center'}}>
+                        <View style={{borderColor:'orange', borderWidth:2, justifyContent:'center', alignItems:'center', padding:10, margin:10}}>
+                            <Text>
+                                Item Name     
+                            </Text>
+                            <Text>
+                                {this.state.requestedItemName}
+                            </Text>
+                        </View>
+                        <View style={{borderColor:'orange', borderWidth:2, justifyContent:'center', alignItems:'center', padding:10, margin:10}}>
+                            <Text>
+                                Item Status
+                            </Text>
+                            <Text>
+                                {this.state.itemStatus}
+                            </Text>
+                        </View>
+                        <TouchableOpacity style={{ borderWidth: 1, borderColor: 'orange', width: 300, alignSelf: 'center', alignItems: 'center', height: 30, margin: 30 }}
+                            onPress={
+                                () =>
+                                {
+                                    this.sendNotification();
+                                    this.updateExchangeRequestStatus();
+                                    this.recievedItem(this.state.requestedItemName)
+                                }
+                            }
+                        >
+                            <Text>
+                                I recieved the item
+                            </Text>
+                        </TouchableOpacity>
+                </View>
+            )    
+            } else
+            {
+                return (
+                    <View style={{flex:1}}>
+                        <AppHeader navigation={this.props.navigation} />
+                        <KeyboardAvoidingView style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+                            <TextInput
+                                style={styles.formTextInput}
+                                placeholder="item name"
+                                maxLength={8}
+                                onChangeText={(text) =>
+                                {
+                                    this.setState( {
+                                        itemName:text
+                                    })
+                                }}
+                                value={this.state.itemName}
+                            />
+                            <TextInput
+                                multiline={true}
+                                numberOfLines={4}
+                                style={[ styles.formTextInput, { width: 300 } ]}
+                                placeholder="item description"
+                                onChangeText={(text) =>
+                                {
+                                    this.setState( {
+                                        description: text,
+                                    })
+                                }}
+                                value={this.state.description}
+                            />
+                        </KeyboardAvoidingView>
+                    </View>
+                )
+            }
+        
     }
 }
-
 const styles = StyleSheet.create( {
   Box: {
   width: "80%",
@@ -113,5 +189,11 @@ const styles = StyleSheet.create( {
     height: 80,
         marginTop: 15,
     alignItems:'center'
+    },
+    formTextInput: {
+  width: "75%",
+  height: RFValue(35),
+  borderWidth: 1,
+  padding: 10,
 },
 })
